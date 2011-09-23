@@ -4,7 +4,7 @@ require "ffi-xattr/version"
 
 Gem::Specification.new do |s|
   s.name        = "ffi-xattr"
-  s.version     = Ffi::Xattr::VERSION
+  s.version     = Xattr::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Jari Bakken"]
   s.email       = ["jari.bakken@gmail.com"]

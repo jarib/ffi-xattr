@@ -1,5 +1,5 @@
-module Ffi
-  module Xattr
-    VERSION = "0.0.1"
-  end
+class Xattr
+  VERSION = "0.0.1"
 end
+
+

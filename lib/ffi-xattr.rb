@@ -1,5 +1,5 @@
-require 'rubygems'
 require 'ffi'
+require 'ffi-xattr/version'
 
 class Xattr
   module Lib
@@ -9,9 +9,9 @@ class Xattr
 
     attach_function :strerror, [:int], :string
 
-    attach_function :listxattr, [:string, :pointer, :size_t], :size_t
-    attach_function :setxattr, [:string, :string, :pointer, :size_t, :int], :int
-    attach_function :getxattr, [:string, :string, :pointer, :size_t], :int
+    attach_function :listxattr,   [:string, :pointer, :size_t], :size_t
+    attach_function :setxattr,    [:string, :string, :pointer, :size_t, :int], :int
+    attach_function :getxattr,    [:string, :string, :pointer, :size_t], :int
     attach_function :removexattr, [:string, :string], :int
   end
 
