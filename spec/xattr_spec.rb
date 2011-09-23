@@ -14,9 +14,12 @@ describe Xattr do
 
   it "can set and get attributes" do
     xattr.set "user.foo", "bar"
-    xattr.list.should == ["user.foo"]
+    xattr.set "user.bar", "boo"
+
+    xattr.list.should == ["user.foo", "user.bar"]
 
     xattr.get("user.foo").should == "bar"
+    xattr.get("user.bar").should == "boo"
   end
 
   it "can remove attributes" do
@@ -25,6 +28,10 @@ describe Xattr do
 
     xattr.remove "user.foo"
     xattr.list.should == []
+  end
+
+  it "returns nil if the attribute is not set" do
+    xattr.get("hello").should be_nil
   end
 
   it "raises Errno::ENOENT if the file doesn't exist" do

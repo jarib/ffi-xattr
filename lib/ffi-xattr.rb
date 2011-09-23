@@ -23,13 +23,15 @@ class Xattr
   def list
     size = Lib.listxattr(@path, nil, 0)
     res_ptr = FFI::MemoryPointer.new(:pointer, size)
-
     Lib.listxattr(@path, res_ptr, size)
-    res_ptr.read_string.split("\000")
+
+    res_ptr.read_string(size).split("\000")
   end
 
   def get(key)
     size = Lib.getxattr(@path, key.to_s, nil, 0)
+    return unless size > 0
+
     str_ptr = FFI::MemoryPointer.new(:char, size);
     Lib.getxattr(@path, key.to_s, str_ptr, size)
 
@@ -53,39 +55,4 @@ class Xattr
   end
 end
 
-if __FILE__ == $0
-  require 'rspec/autorun'
 
-  describe Xattr do
-    let(:path) { "test.txt" }
-    let(:xattr) { Xattr.new(path) }
-
-    before { File.open(path, "w") { |io| io << "some content" } }
-    after { File.delete(path) }
-
-    it "has an inital empty list of xattrs" do
-      xattr.list.should be_kind_of(Array)
-      xattr.list.should be_empty
-    end
-
-    it "can set and get attributes" do
-      xattr.set "user.foo", "bar"
-      xattr.list.should == ["user.foo"]
-
-      xattr.get("user.foo").should == "bar"
-    end
-
-    it "can remove attributes" do
-      xattr.set "user.foo", "bar"
-      xattr.list.should == ["user.foo"]
-
-      xattr.remove "user.foo"
-      xattr.list.should == []
-    end
-
-    it "raises Errno::ENOENT if the file doesn't exist" do
-      lambda { Xattr.new("no-such-file") }.should raise_error(Errno::ENOENT)
-    end
-
-  end
-end
