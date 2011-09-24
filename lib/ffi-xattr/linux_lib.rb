@@ -33,7 +33,7 @@ class Xattr
       Error.check setxattr(path, key, value, value.bytesize, 0)
     end
 
-    def self.remote(path, key)
+    def self.remove(path, key)
       Error.check removexattr(path, key.to_s)
     end
 
