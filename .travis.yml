@@ -1,0 +1,2 @@
+before_script:
+  - sudo mount / -o remount,user_xattr
