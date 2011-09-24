@@ -14,8 +14,10 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "ffi-xattr"
 
-  s.add_development_dependency "rspec", "~> 2.5"
+
   s.add_dependency "ffi"
+  s.add_development_dependency "rspec", "~> 2.5"
+  s.add_development_dependency "rake", "~> 0.9.2"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
