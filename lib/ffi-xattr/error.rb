@@ -8,7 +8,7 @@ class Xattr
 
     def self.last
       ptr = FFI::MemoryPointer.new(:char, 256)
-      strerrror_r(FFI.errno, ptr, 256)
+      strerror_r(FFI.errno, ptr, 256)
 
       ptr.read_string
     end
