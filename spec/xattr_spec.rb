@@ -39,6 +39,27 @@ describe Xattr do
     xattr.get("hello").should be_nil
   end
 
+  it "can iterate over all attributes" do
+    xattr.set("user.hello", "world")
+
+    called = false
+    xattr.each do |key, value|
+      called = true
+
+      key.should == "user.hello"
+      value.should == "world"
+    end
+
+    called.should be_true
+  end
+
+  it "is Enumerable" do
+    xattr.should be_kind_of(Enumerable)
+
+    xattr['user.foo'] = 'bar'
+    xattr.to_a.should == [['user.foo', 'bar']]
+  end
+
   it "raises Errno::ENOENT if the file doesn't exist" do
     lambda { Xattr.new("no-such-file") }.should raise_error(Errno::ENOENT)
   end

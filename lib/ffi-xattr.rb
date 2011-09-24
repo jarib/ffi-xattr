@@ -12,6 +12,8 @@ else
 end
 
 class Xattr
+  include Enumerable
+
   def initialize(path)
     raise Errno::ENOENT, path unless File.exist?(path)
     @path = path
@@ -33,6 +35,12 @@ class Xattr
 
   def remove(key)
     Lib.remove @path, key.to_s
+  end
+
+  def each(&blk)
+    list.each do |key|
+      yield key, get(key)
+    end
   end
 
 end
