@@ -24,10 +24,12 @@ class Xattr
   def get(key)
     Lib.get @path, key.to_s
   end
+  alias_method :[], :get
 
   def set(key, value)
     Lib.set @path, key.to_s, value.to_s
   end
+  alias_method :[]=, :set
 
   def remove(key)
     Lib.remove @path, key.to_s

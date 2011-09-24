@@ -22,6 +22,11 @@ describe Xattr do
     xattr.get("user.bar").should == "boo"
   end
 
+  it "can get and set with #[] and #[]=" do
+    xattr['user.foo'] = 'baz'
+    xattr['user.foo'].should == 'baz'
+  end
+
   it "can remove attributes" do
     xattr.set "user.foo", "bar"
     xattr.list.should == ["user.foo"]
