@@ -16,7 +16,7 @@ describe Xattr do
     xattr.set "user.foo", "bar"
     xattr.set "user.bar", "boo"
 
-    xattr.list.should == ["user.foo", "user.bar"]
+    xattr.list.sort.should == ["user.bar", "user.foo"]
 
     xattr.get("user.foo").should == "bar"
     xattr.get("user.bar").should == "boo"
