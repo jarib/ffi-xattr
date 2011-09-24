@@ -60,6 +60,13 @@ describe Xattr do
     xattr.to_a.should == [['user.foo', 'bar']]
   end
 
+  it "returns a Hash for #as_json" do
+    xattr['user.foo'] = 'bar'
+    xattr['user.bar'] = 'baz'
+
+    xattr.as_json.should == {'user.foo' => 'bar', 'user.bar' => 'baz'}
+  end
+
   it "raises Errno::ENOENT if the file doesn't exist" do
     lambda { Xattr.new("no-such-file") }.should raise_error(Errno::ENOENT)
   end

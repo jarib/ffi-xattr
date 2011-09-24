@@ -43,6 +43,13 @@ class Xattr
     end
   end
 
+  def as_json(*args)
+    res = {}
+    each { |k,v| res[k] = v }
+
+    res
+  end
+
 end
 
 
