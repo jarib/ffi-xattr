@@ -6,15 +6,17 @@ class Xattr
 
     attach_function :strerror_r, [:int, :pointer, :size_t], :int
 
-    def self.last
-      ptr = FFI::MemoryPointer.new(:char, 256)
-      strerror_r(FFI.errno, ptr, 256)
+    class << self
+      def last
+        ptr = FFI::MemoryPointer.new(:char, 256)
+        strerror_r(FFI.errno, ptr, 256)
 
-      ptr.read_string
-    end
+        ptr.read_string
+      end
 
-    def self.check(int)
-      raise last if int != 0
+      def check(int)
+        raise last if int != 0
+      end
     end
   end
 end
