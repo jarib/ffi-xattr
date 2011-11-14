@@ -11,30 +11,41 @@ class Xattr
     attach_function :getxattr,    [:string, :string, :pointer, :size_t], :int
     attach_function :removexattr, [:string, :string], :int
 
-    def self.list(path)
-      size = listxattr(path, nil, 0)
-      res_ptr = FFI::MemoryPointer.new(:pointer, size)
-      listxattr(path, res_ptr, size)
+    attach_function :llistxattr,   [:string, :pointer, :size_t], :size_t
+    attach_function :lsetxattr,    [:string, :string, :pointer, :size_t, :int], :int
+    attach_function :lgetxattr,    [:string, :string, :pointer, :size_t], :int
+    attach_function :lremovexattr, [:string, :string], :int
 
-      res_ptr.read_string(size).split("\000")
-    end
+    class << self
+      def list(path, no_follow)
+        method = no_follow ? :llistxattr : :listxattr
+        size = send(method, path, nil, 0)
+        res_ptr = FFI::MemoryPointer.new(:pointer, size)
+        send(method, path, res_ptr, size)
 
-    def self.get(path, key)
-      size = getxattr(path, key, nil, 0)
-      return unless size > 0
+        res_ptr.read_string(size).split("\000")
+      end
 
-      str_ptr = FFI::MemoryPointer.new(:char, size);
-      getxattr(path, key, str_ptr, size)
+      def get(path, no_follow, key)
+        method = no_follow ? :lgetxattr : :getxattr
+        size = send(method, path, key, nil, 0)
+        return unless size > 0
 
-      str_ptr.read_string
-    end
+        str_ptr = FFI::MemoryPointer.new(:char, size);
+        send(method, path, key, str_ptr, size)
 
-    def self.set(path, key, value)
-      Error.check setxattr(path, key, value, value.bytesize, 0)
-    end
+        str_ptr.read_string
+      end
 
-    def self.remove(path, key)
-      Error.check removexattr(path, key.to_s)
+      def set(path, no_follow, key, value)
+        method = no_follow ? :lsetxattr : :setxattr
+        Error.check send(method, path, key, value, value.bytesize, 0)
+      end
+
+      def remove(path, no_follow, key)
+        method = no_follow ? :lremovexattr : :removexattr
+        Error.check send(method, path, key)
+      end
     end
 
   end

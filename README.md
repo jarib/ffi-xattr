@@ -11,17 +11,12 @@ Example
 
     xattr = Xattr.new("/path/to/file")
     xattr['user.foo'] = 'bar'
-    
+
     xattr['user.foo'] #=> 'bar'
     xattr.list        #=> ["user.foo"]
-    
+
     xattr.each { |key, value| ... }
     xattr.as_json     #=> {"user.foo" => "bar"}
-
-TODO
-----
-
-* Handle symlinks
 
 
 Note on Patches/Pull Requests

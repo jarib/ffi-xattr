@@ -14,27 +14,28 @@ end
 class Xattr
   include Enumerable
 
-  def initialize(path)
+  def initialize(path, options = {})
     raise Errno::ENOENT, path unless File.exist?(path)
     @path = path
+    @no_follow = !!options[:no_follow]
   end
 
   def list
-    Lib.list @path
+    Lib.list @path, @no_follow
   end
 
   def get(key)
-    Lib.get @path, key.to_s
+    Lib.get @path, @no_follow, key.to_s
   end
   alias_method :[], :get
 
   def set(key, value)
-    Lib.set @path, key.to_s, value.to_s
+    Lib.set @path, @no_follow, key.to_s, value.to_s
   end
   alias_method :[]=, :set
 
   def remove(key)
-    Lib.remove @path, key.to_s
+    Lib.remove @path, @no_follow, key.to_s
   end
 
   def each(&blk)
@@ -51,5 +52,3 @@ class Xattr
   end
 
 end
-
-
