@@ -1,4 +1,4 @@
-class Xattr
+class Xattr # :nodoc: all
   module Error
     extend FFI::Library
 
