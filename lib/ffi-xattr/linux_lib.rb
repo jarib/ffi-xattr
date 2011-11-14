@@ -31,7 +31,7 @@ class Xattr # :nodoc: all
         size = send(method, path, key, nil, 0)
         return unless size > 0
 
-        str_ptr = FFI::MemoryPointer.new(:char, size);
+        str_ptr = FFI::MemoryPointer.new(:char, size)
         send(method, path, key, str_ptr, size)
 
         str_ptr.read_string

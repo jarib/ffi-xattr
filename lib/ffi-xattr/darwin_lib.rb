@@ -26,7 +26,7 @@ class Xattr # :nodoc: all
         size = getxattr(path, key, nil, 0, 0, options)
         return unless size > 0
 
-        str_ptr = FFI::MemoryPointer.new(:char, size);
+        str_ptr = FFI::MemoryPointer.new(:char, size)
         getxattr(path, key, str_ptr, size, 0, options)
 
         str_ptr.read_string
