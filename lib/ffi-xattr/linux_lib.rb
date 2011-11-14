@@ -34,7 +34,7 @@ class Xattr
     end
 
     def self.remove(path, key)
-      Error.check removexattr(path, key.to_s)
+      Error.check removexattr(path, key)
     end
 
   end
