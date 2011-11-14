@@ -51,5 +51,3 @@ class Xattr
   end
 
 end
-
-
