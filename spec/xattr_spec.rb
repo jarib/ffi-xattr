@@ -71,4 +71,50 @@ describe Xattr do
     lambda { Xattr.new("no-such-file") }.should raise_error(Errno::ENOENT)
   end
 
+  describe "respecting :no_follow option" do
+    let(:link)   { "link.txt" }
+    let(:xattr_f) { Xattr.new(link, :no_follow => false) }
+    let(:xattr_n) { Xattr.new(link, :no_follow => true) }
+
+    before { File.symlink(path, link) }
+    after  { File.delete(link) }
+
+    it "should set and get attributes" do
+      xattr['a'] = 'foo'
+      xattr_f['b'] = 'bar'
+      xattr_n['c'] = 'baz'
+
+      xattr.list.sort.should == %w[a b]
+      xattr_f.list.sort.should == %w[a b]
+      xattr_n.list.sort.should == %w[c]
+
+      xattr['a'].should == 'foo'
+      xattr['b'].should == 'bar'
+      xattr['c'].should be_nil
+      xattr_f['a'].should == 'foo'
+      xattr_f['b'].should == 'bar'
+      xattr_f['c'].should be_nil
+      xattr_n['a'].should be_nil
+      xattr_n['b'].should be_nil
+      xattr_n['c'].should == 'baz'
+    end
+
+    it "should remove attributes" do
+      xattr['a'] = 'foo'
+      xattr_f['b'] = 'bar'
+      xattr_n['c'] = 'baz'
+      xattr_n['d'] = 'ban'
+
+      xattr.list.sort.should == %w[a b]
+      xattr_f.list.sort.should == %w[a b]
+      xattr_n.list.sort.should == %w[c d]
+
+      xattr_f.remove('a')
+      xattr_n.remove('c')
+
+      xattr.list.sort.should == %w[b]
+      xattr_f.list.sort.should == %w[b]
+      xattr_n.list.sort.should == %w[d]
+    end
+  end
 end
