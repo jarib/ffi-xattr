@@ -83,42 +83,58 @@ describe Xattr do
     before { File.symlink(path, link) }
     after  { File.delete(link) }
 
-    it "should set and get attributes" do
-      xattr['a'] = 'foo'
-      xattr_f['b'] = 'bar'
-      xattr_n['c'] = 'baz'
+    case RUBY_PLATFORM
+    when /linux/
+      # http://linux.die.net/man/5/attr
+      it "should allow getting extended attributes on any type" do
+        xattr['user.a']
+        xattr_f['user.b']
+        xattr_n['user.c']
+      end
 
-      xattr.list.sort.should == %w[a b]
-      xattr_f.list.sort.should == %w[a b]
-      xattr_n.list.sort.should == %w[c]
+      it "should fail setting extended attributes on symlink" do
+        lambda { xattr['user.a'] = 'foo' }.should_not raise_error
+        lambda { xattr_f['user.b'] = 'bar' }.should_not raise_error
+        lambda { xattr_n['user.c'] = 'baz' }.should raise_error
+      end
+    when /darwin|bsd/
+      it "should set and get attributes" do
+        xattr['user.a'] = 'foo'
+        xattr_f['user.b'] = 'bar'
+        xattr_n['user.c'] = 'baz'
 
-      xattr['a'].should == 'foo'
-      xattr['b'].should == 'bar'
-      xattr['c'].should be_nil
-      xattr_f['a'].should == 'foo'
-      xattr_f['b'].should == 'bar'
-      xattr_f['c'].should be_nil
-      xattr_n['a'].should be_nil
-      xattr_n['b'].should be_nil
-      xattr_n['c'].should == 'baz'
-    end
+        xattr.list.sort.should == %w[user.a user.b]
+        xattr_f.list.sort.should == %w[user.a user.b]
+        xattr_n.list.sort.should == %w[user.c]
 
-    it "should remove attributes" do
-      xattr['a'] = 'foo'
-      xattr_f['b'] = 'bar'
-      xattr_n['c'] = 'baz'
-      xattr_n['d'] = 'ban'
+        xattr['user.a'].should == 'foo'
+        xattr['user.b'].should == 'bar'
+        xattr['user.c'].should be_nil
+        xattr_f['user.a'].should == 'foo'
+        xattr_f['user.b'].should == 'bar'
+        xattr_f['user.c'].should be_nil
+        xattr_n['user.a'].should be_nil
+        xattr_n['user.b'].should be_nil
+        xattr_n['user.c'].should == 'baz'
+      end
 
-      xattr.list.sort.should == %w[a b]
-      xattr_f.list.sort.should == %w[a b]
-      xattr_n.list.sort.should == %w[c d]
+      it "should remove attributes" do
+        xattr['user.a'] = 'foo'
+        xattr_f['user.b'] = 'bar'
+        xattr_n['user.c'] = 'baz'
+        xattr_n['user.d'] = 'ban'
 
-      xattr_f.remove('a')
-      xattr_n.remove('c')
+        xattr.list.sort.should == %w[user.a user.b]
+        xattr_f.list.sort.should == %w[user.a user.b]
+        xattr_n.list.sort.should == %w[user.c user.d]
 
-      xattr.list.sort.should == %w[b]
-      xattr_f.list.sort.should == %w[b]
-      xattr_n.list.sort.should == %w[d]
+        xattr_f.remove('user.a')
+        xattr_n.remove('user.c')
+
+        xattr.list.sort.should == %w[user.b]
+        xattr_f.list.sort.should == %w[user.b]
+        xattr_n.list.sort.should == %w[user.d]
+      end
     end
   end
 end
