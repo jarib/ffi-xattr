@@ -75,6 +75,26 @@ describe Xattr do
     lambda { Xattr.new("no-such-file") }.should raise_error(Errno::ENOENT)
   end
 
+  it "should raise type error if initialized with object that can not be directly converted to string" do
+    lambda{ Xattr.new(1) }.should raise_error(TypeError)
+  end
+
+  class SuperPath
+    def initialize(path)
+      @path = path
+    end
+
+    def to_str
+      @path.dup
+    end
+  end
+
+  it "should work with object that can be directly converted to string" do
+    super_path = SuperPath.new(path)
+    Xattr.new(super_path).set('user.foo', 'bar')
+    Xattr.new(super_path).get('user.foo').should == 'bar'
+  end
+
   describe "respecting :no_follow option" do
     let(:link)   { "link.txt" }
     let(:xattr_f) { Xattr.new(link, :no_follow => false) }

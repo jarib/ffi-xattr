@@ -18,7 +18,7 @@ class Xattr
   # Use <tt>:no_follow => true</tt> in options to work on symlink itself instead of following it.
   def initialize(path, options = {})
     raise Errno::ENOENT, path unless File.exist?(path)
-    @path = path
+    @path = path.to_str
     @no_follow = !!options[:no_follow]
   end
 
