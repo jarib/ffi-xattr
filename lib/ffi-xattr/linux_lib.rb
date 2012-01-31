@@ -34,7 +34,7 @@ class Xattr # :nodoc: all
         str_ptr = FFI::MemoryPointer.new(:char, size)
         send(method, path, key, str_ptr, size)
 
-        str_ptr.read_string
+        str_ptr.read_string(size)
       end
 
       def set(path, no_follow, key, value)
