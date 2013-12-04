@@ -3,4 +3,4 @@ rvm:
   - 1.9.2
   - 1.9.3
 before_script:
-  - sudo mount / -o remount,user_xattr
+  - sudo mount / -o remount,user_xattr || echo 'failed to remount'
