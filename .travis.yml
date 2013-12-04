@@ -3,4 +3,4 @@ rvm:
   - 1.9.2
   - 1.9.3
 before_script:
-  - sudo mount / -o remount,user_xattr || echo 'failed to remount'
+  - 'sudo mount / -o remount,user_xattr || (echo "see https://github.com/travis-ci/travis-ci/issues/1281" && exit 1)'
