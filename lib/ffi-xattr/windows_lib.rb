@@ -9,7 +9,7 @@ class Xattr # :nodoc: all
         lines = `dir /r "#{path}"`.split("\n")
 
         xattrs = []
-        for line in lines
+        lines.each { |line|
           if line =~ /\:\$DATA$/
             size = line.split(' ')[0].gsub(/[^0-9]/,'').to_i
 
@@ -17,24 +17,21 @@ class Xattr # :nodoc: all
               xattrs << line.split(':')[1]
             end
           end
-        end
-
+        }
         xattrs
       end
 
       def get(path, no_follow, key)
         fp = "#{path}:#{key}"
-        if FileTest.exists?(fp)
+        if File.exists?(fp)
           File.binread(fp)
         else
-          raise "No such key. #{key}. #{path}"
+          raise "No such key. #{key.inspect} #{path.inspect}"
         end
       end
 
       def set(path, no_follow, key, value)
-        f = File.new("#{path}:#{key}",'wb')
-        f.write(value)
-        f.close
+        File.open("#{path}:#{key}",'wb') { |io| io << value }
       end
 
       def remove(path, no_follow, key)
