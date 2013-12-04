@@ -7,6 +7,8 @@ when /linux/
   require 'ffi-xattr/linux_lib'
 when /darwin|bsd/
   require 'ffi-xattr/darwin_lib'
+when /mingw/
+  require 'ffi-xattr/windows_lib'
 else
   raise NotImplementedError, "ffi-xattr not supported on #{RUBY_PLATFORM}"
 end

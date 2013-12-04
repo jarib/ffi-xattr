@@ -4,7 +4,7 @@ class Xattr # :nodoc: all
 
     ffi_lib "c"
 
-    attach_function :strerror_r, [:int, :pointer, :size_t], :int
+    attach_function :strerror_r, [:int, :pointer, :size_t], :int unless RUBY_PLATFORM =~ /mingw/
 
     class << self
       def last
