@@ -9,15 +9,16 @@ Ruby library to manage extended file attributes.
 Example
 -------
 
-    xattr = Xattr.new("/path/to/file")
-    xattr['user.foo'] = 'bar'
+```ruby
+  xattr = Xattr.new("/path/to/file")
+  xattr['user.foo'] = 'bar'
 
-    xattr['user.foo'] #=> 'bar'
-    xattr.list        #=> ["user.foo"]
+  xattr['user.foo'] #=> 'bar'
+  xattr.list        #=> ["user.foo"]
 
-    xattr.each { |key, value| ... }
-    xattr.as_json     #=> {"user.foo" => "bar"}
-
+  xattr.each { |key, value| ... }
+  xattr.as_json     #=> {"user.foo" => "bar"}
+```
 
 Note on Patches/Pull Requests
 -----------------------------
@@ -33,7 +34,7 @@ Note on Patches/Pull Requests
 Copyright
 ---------
 
-Copyright 2011-2012 Jari Bakken
+Copyright 2011-2014 Jari Bakken
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -35,8 +35,11 @@ describe Xattr do
     xattr.list.should == []
   end
 
-  it "raises error when tries to remove inexistent attribute" do
-    lambda { xattr.remove("inexisting") }.should raise_error
+  it "raises Errno: when tries to remove inexistent attribute" do
+    lambda { xattr.remove("user.inexisting") }.should raise_error { |error|
+        error.should be_a(SystemCallError)
+        error.should respond_to(:errno)
+    }
   end
 
   it "returns nil if the attribute is not set" do

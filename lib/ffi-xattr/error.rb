@@ -8,14 +8,15 @@ class Xattr # :nodoc: all
 
     class << self
       def last
+        errno = FFI.errno
         ptr = FFI::MemoryPointer.new(:char, 256)
-        strerror_r(FFI.errno, ptr, 256)
+        strerror_r(errno, ptr, 256)
 
-        ptr.read_string
+        [ ptr.read_string, errno ]
       end
 
       def check(int)
-        raise last if int != 0
+        raise SystemCallError.new(*last) if int != 0
       end
     end
   end
