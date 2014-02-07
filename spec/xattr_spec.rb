@@ -82,20 +82,22 @@ describe Xattr do
     lambda{ Xattr.new(1) }.should raise_error(TypeError)
   end
 
-  class SuperPath
-    def initialize(path)
-      @path = path
-    end
+  it "should work with object that can be converted to string" do
+    super_path = double("super_path")
+    super_path.should_receive(:to_str).and_return(path)
 
-    def to_str
-      @path.dup
-    end
+    Xattr.new(super_path).set('user.foo', 'bar')
+    
+    Xattr.new(path).get('user.foo').should == 'bar'
   end
 
-  it "should work with object that can be directly converted to string" do
-    super_path = SuperPath.new(path)
-    Xattr.new(super_path).set('user.foo', 'bar')
-    Xattr.new(super_path).get('user.foo').should == 'bar'
+  it "should work with object that can be coerced to string with #to_path" do
+      to_path_obj = double("to_path")
+      to_path_obj.should_receive(:to_path).and_return(path)
+    
+      Xattr.new(to_path_obj).set('user.to_path', 'bar')
+    
+      Xattr.new(path).get('user.to_path').should == 'bar'
   end
 
   describe "respecting :no_follow option" do
