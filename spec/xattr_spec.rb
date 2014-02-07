@@ -91,6 +91,15 @@ describe Xattr do
     Xattr.new(path).get('user.foo').should == 'bar'
   end
 
+  it "should work with object that can be coerced to string with #to_path" do
+      to_path_obj = double("to_path")
+      to_path_obj.should_receive(:to_path).and_return(path)
+    
+      Xattr.new(to_path_obj).set('user.to_path', 'bar')
+    
+      Xattr.new(path).get('user.to_path').should == 'bar'
+  end
+
   describe "respecting :no_follow option" do
     let(:link)   { "link.txt" }
     let(:xattr_f) { Xattr.new(link, :no_follow => false) }
