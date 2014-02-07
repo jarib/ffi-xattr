@@ -19,8 +19,8 @@ describe "Xattr extensions" do
     end
   end
 
-  describe "Pathname.xattr" do
-    it "should return an Xattr for the underling path" do
+  describe "Pathname#xattr" do
+    it "should return an Xattr for the underlying path" do
       p = Pathname.new(path)
       x = p.xattr
 
