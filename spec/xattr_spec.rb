@@ -67,11 +67,13 @@ describe Xattr do
     xattr.to_a.should == [['user.foo', 'bar']]
   end
 
-  it "returns a Hash for #as_json" do
+  it "returns a Hash for #to_hash, #to_h, #as_json" do
     xattr['user.foo'] = 'bar'
     xattr['user.bar'] = 'baz'
 
-    xattr.as_json.should == {'user.foo' => 'bar', 'user.bar' => 'baz'}
+    xattr.to_hash.should == {'user.foo' => 'bar', 'user.bar' => 'baz'}
+    xattr.to_h.should == {'user.foo' => 'bar', 'user.bar' => 'baz'}
+    xattr.as_json(foo: 1).should == {'user.foo' => 'bar', 'user.bar' => 'baz'}
   end
 
   it "raises Errno::ENOENT if the file doesn't exist" do
@@ -87,16 +89,16 @@ describe Xattr do
     super_path.should_receive(:to_str).and_return(path)
 
     Xattr.new(super_path).set('user.foo', 'bar')
-    
+
     Xattr.new(path).get('user.foo').should == 'bar'
   end
 
   it "should work with object that can be coerced to string with #to_path" do
       to_path_obj = double("to_path")
       to_path_obj.should_receive(:to_path).and_return(path)
-    
+
       Xattr.new(to_path_obj).set('user.to_path', 'bar')
-    
+
       Xattr.new(path).get('user.to_path').should == 'bar'
   end
 

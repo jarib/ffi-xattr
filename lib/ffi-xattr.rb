@@ -28,7 +28,7 @@ class Xattr
         path
       end
     raise Errno::ENOENT, @path unless File.exist?(@path)
-    
+
     @no_follow = !!options[:no_follow]
   end
 
@@ -62,11 +62,17 @@ class Xattr
   end
 
   # Returns hash of extended attributes
-  def as_json(*args)
+
+  def to_hash
     res = {}
     each { |k,v| res[k] = v }
 
     res
   end
 
+  alias_method :to_h, :to_hash
+
+  def as_json(*args)
+    to_hash
+  end
 end
