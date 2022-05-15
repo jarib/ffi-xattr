@@ -16,7 +16,7 @@ class Xattr # :nodoc: all
       end
 
       def check(int)
-        raise SystemCallError.new(*last) if int != 0
+        raise SystemCallError.new(*last) if int < 0
       end
     end
   end
