@@ -57,7 +57,7 @@ describe Xattr do
       value.should == "world"
     end
 
-    called.should be_true
+    called.should == true
   end
 
   it "is Enumerable" do
