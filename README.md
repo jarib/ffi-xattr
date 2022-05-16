@@ -1,3 +1,6 @@
+# [Looking for new maintainer](https://github.com/jarib/ffi-xattr/issues/13) 
+
+
 ffi-xattr
 =========
 
