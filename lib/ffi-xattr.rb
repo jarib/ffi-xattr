@@ -5,6 +5,8 @@ require 'ffi-xattr/error'
 case RUBY_PLATFORM
 when /linux/
   require 'ffi-xattr/linux_lib'
+when /freebsd/
+  require 'ffi-xattr/freebsd_lib'
 when /darwin|bsd/
   require 'ffi-xattr/darwin_lib'
 when /mingw/
